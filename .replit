@@ -1,0 +1,69 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Desktop Widget App"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Desktop Widget CLI"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Modern Widget Preview"
+
+[[workflows.workflow]]
+name = "Desktop Widget App"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python main.py 2>&1"
+
+[[workflows.workflow]]
+name = "Desktop Widget CLI"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -c \"import sys, os; from main import run_cli_version; os.environ['DISPLAY'] = ''; run_cli_version()\""
+
+[[workflows.workflow]]
+name = "Modern Widget Preview"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python modern_widget_tk.py"
+
+[deployment]
+run = ["sh", "-c", "pip install PyQt5 && python main.py"]
